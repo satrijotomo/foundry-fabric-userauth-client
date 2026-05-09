@@ -112,6 +112,5 @@ Multiple traceIds per chat session = ✅ expected behavior
 
 ⚠️ Notes
 
-Do NOT manually generate conversation_id
-Always use the one returned by Foundry
-.env is excluded from Git via .gitignore (for security)
+- Do NOT manually generate conversation_id
+- Always use the one returned by Foundry
