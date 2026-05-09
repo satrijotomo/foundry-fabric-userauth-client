@@ -1,43 +1,114 @@
-# Foundry + Fabric User-Authenticated Python Client
+# Foundry Fabric Agent Chat UI
 
-This repo provides a ready-to-run Python client for:
+A Streamlit-based chat application that connects to an Azure AI Foundry Agent with Fabric Data Agent integration using user authentication (Entra ID).
 
-- Authenticating an end user with Microsoft Entra ID using interactive browser sign-in
-- Calling a published Azure AI Foundry agent through the **Responses** protocol
-- Calling a published Azure AI Foundry agent through the **Activity** protocol
-- Optionally calling a **Fabric data agent directly** using the same signed-in user identity
+---
 
-## Why this repo exists
+## 🚀 Features
 
-Microsoft documents that external Python apps can consume **Fabric data agents** using **interactive browser authentication**, and the data agent runs with the **signed-in user’s permissions**. Microsoft also documents that published Foundry agents can be invoked via the **Responses** and **Activity** protocols. 【1-a6d7ea】【2-6ed868】【3-4b5991】
+- ✅ Interactive **chat UI (Streamlit)**
+- ✅ **User authentication** via Entra ID (InteractiveBrowserCredential)
+- ✅ **Session-based chat memory** using Foundry `conversation_id`
+- ✅ **"New Chat" support** (starts a fresh conversation)
+- ✅ **Fabric Data Agent integration** for data-driven answers
+- ✅ Clean, minimal chat output (no tool noise)
 
-This repo gives you a practical pattern to test both paths in one place.
+---
 
-## Important limitation
+## 🧠 Architecture
 
-This repo supports:
+Streamlit UI (chat)
 
-1. Calling your Foundry agent endpoint with a signed-in user
-2. Calling a Fabric data agent directly with the same signed-in user
+↓
+Session State
 
-However, the sourced Microsoft documentation used here does **not explicitly confirm** that a delegated user token sent to the Foundry `/responses` endpoint is automatically forwarded to an embedded Fabric data agent tool inside that Foundry agent. Because of that, the direct Fabric call is included as the **documented user-authenticated path**. 【1-a6d7ea】【2-6ed868】
+auth (cached login)
+conversation_id
+chat history
 
-## Repo structure
+↓
 
-```text
-foundry-fabric-userauth-client/
-├── README.md
-├── requirements.txt
-├── .env.example
-├── .gitignore
+Azure AI Foundry Agent (/responses)
+
+↓
+Fabric Data Agent (tool)
+
+## 📁 Project Structure
+foundry-fabric-agent-chat/
+│
 ├── app/
-│   ├── __init__.py
+│   ├── init.py
+│   ├── chat_ui.py           # Streamlit UI (entry point)
 │   ├── config.py
 │   ├── auth.py
 │   ├── foundry_client.py
-│   ├── fabric_client.py
-│   └── main.py
-└── samples/
-    └── activity_payload.json
+│
+├── .env
+├── requirements.txt
+├── README.md
+
+---
+
+## ⚙️ Prerequisites
+
+- Python 3.10+
+- Azure subscription
+- Azure AI Foundry project with:
+  - published agent
+  - Fabric Data Agent tool configured
+- Entra ID access to the agent
+
+---
+
+## 🔐 Configuration
+
+Create a `.env` file:
 
 
+TENANT_ID=<your-tenant-id>
+
+FOUNDRY_RESPONSES_URL=https://<your-foundry-endpoint>/responses?api-version=v1
+FOUNDRY_ACTIVITY_URL=https://<your-foundry-endpoint>/activityprotocol?api-version=v1
+
+🧪 Run Locally (Streamlit UI)
+1. Create and activate virtual environment
+Shellpython -m venv .venv# Windows.venv\Scripts\activate# macOS/Linuxsource .venv/bin/activateShow more lines
+
+2. Install dependencies
+Shellpip install -r requirements.txtShow more lines
+
+3. Run the chat UI
+Shellstreamlit run app/chat_ui.pyShow more lines
+
+4. Open browser
+http://localhost:8501
+
+
+💬 How it Works
+✅ First message
+
+No conversation_id sent
+Foundry creates a conversation
+
+✅ Subsequent messages
+
+App reuses returned conversation_id
+Context is preserved
+
+✅ New Chat button
+
+Clears conversation_id
+Starts a fresh session
+
+
+📊 Observability (Important)
+
+Each user message = new traceId in Foundry
+Conversations are still maintained internally via conversation_id
+Multiple traceIds per chat session = ✅ expected behavior
+
+⚠️ Notes
+
+Do NOT manually generate conversation_id
+Always use the one returned by Foundry
+.env is excluded from Git via .gitignore (for security)
