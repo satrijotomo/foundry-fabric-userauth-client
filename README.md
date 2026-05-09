@@ -17,6 +17,7 @@ A Streamlit-based chat application that connects to an Azure AI Foundry Agent wi
 
 ## 🧠 Architecture
 
+```
 User (Streamlit Chat UI)
 │
 ├── Session State
@@ -29,9 +30,12 @@ Azure AI Foundry Agent (/responses)
 │
 ▼
 Fabric Data Agent (tool)
+```
 
 
-📁 Project Structure
+## 📁 Project Structure
+
+```
 foundry-fabric-agent-chat/
 │
 ├── app/
@@ -44,6 +48,7 @@ foundry-fabric-agent-chat/
 ├── .env                   # Local configuration (NOT committed)
 ├── requirements.txt       # Python dependencies
 ├── README.md
+```
 
 
 
