@@ -17,37 +17,35 @@ A Streamlit-based chat application that connects to an Azure AI Foundry Agent wi
 
 ## 🧠 Architecture
 
-Streamlit UI (chat)
-
-↓
-Session State
-
-auth (cached login)
-conversation_id
-chat history
-
-↓
-
+User (Streamlit Chat UI)
+│
+├── Session State
+│     ├── auth (cached login)
+│     ├── conversation_id
+│     └── chat_history
+│
+▼
 Azure AI Foundry Agent (/responses)
-
-↓
+│
+▼
 Fabric Data Agent (tool)
 
-## 📁 Project Structure
+
+📁 Project Structure
 foundry-fabric-agent-chat/
 │
 ├── app/
-│   ├── init.py
-│   ├── chat_ui.py           # Streamlit UI (entry point)
-│   ├── config.py
-│   ├── auth.py
-│   ├── foundry_client.py
+│   ├── __init__.py
+│   ├── chat_ui.py         # Streamlit chat UI (entry point)
+│   ├── config.py          # Loads environment variables
+│   ├── auth.py            # Entra ID authentication (user login)
+│   ├── foundry_client.py  # Calls Foundry Agent (/responses)
 │
-├── .env
-├── requirements.txt
+├── .env                   # Local configuration (NOT committed)
+├── requirements.txt       # Python dependencies
 ├── README.md
 
----
+
 
 ## ⚙️ Prerequisites
 
